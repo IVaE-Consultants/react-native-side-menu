@@ -29,7 +29,7 @@ const hiddenMenuOffset = 0;
  * release without menu closing
  * @type {Number}
  */
-const barrierForward = deviceScreen.width / 4;
+const barrierForward = deviceScreen.width / 10;
 
 /**
  * Check if the current gesture offset bigger than allowed one
@@ -205,13 +205,23 @@ class SideMenu extends Component {
    * @return {Void}
    */
   handlePanResponderEnd(e: Object, gestureState: Object) {
-    const shouldOpen = this.menuPositionMultiplier() *
-      (this.left + gestureState.dx);
 
-    if (shouldOpenMenu(shouldOpen)) {
-      this.openMenu();
+    if(this.isOpen) {
+        let menuOffset = this.props.openMenuOffset || openMenuOffset;
+        let shouldClose = menuOffset - this.menuPositionMultiplier() * (this.left + gestureState.dx);
+        if (shouldOpenMenu(shouldClose)) {
+            this.closeMenu();
+        } else {
+            this.openMenu();
+        }
     } else {
-      this.closeMenu();
+        var shouldOpen = this.menuPositionMultiplier() *
+            (this.left + gestureState.dx);
+        if (shouldOpenMenu(shouldOpen)) {
+            this.openMenu();
+        } else {
+            this.closeMenu();
+        }
     }
 
     this.updatePosition();
